@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'home/css/home.css' %}">
+{% endblock %}
+
+{% block 'dashboard' %}
+    <br>
+    <br>
+    <div class="container-fluid home">
+        <h1>CAVALARI CAR CENTER</h1>
+        <h2>Auto Mecanica</h2>
+        <br>
+        <br>
+        <h3>Fone: (19) 99260-9905 <img src="https://img.icons8.com/office/45/null/whatsapp--v1.png"/></h3>
+        <h3>Rua: Dr. Dante Erbolato, 2154 - Satélite Iris 1, Campinas <img  src="https://img.icons8.com/ios-glyphs/45/000000/map-pin.png"/></h3>
+        <h4>Seg á Sex 08h a 18h - Sab 08h a 12h</h4>
+    </div>
+    
+<script src="{% static 'clientes/js/clientes.js' %}"></script>
+{% endblock%}

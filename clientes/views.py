@@ -4,6 +4,9 @@ from .models import Cliente, Carro
 import re
 from django.core import serializers
 import json
+from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse
+from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 
 def clientes(request):
@@ -23,7 +26,7 @@ def clientes(request):
         cliente = Cliente.objects.filter(cpf=cpf)
 
         if cliente.exists():
-            return render(request, 'clientes.html', {'nome': nome, 'sobrenome': sobrenome, 'email': email, 'carros': zip(carros, placas, anos)})
+            return render(request, 'clientes.html', {'nome': nome, 'sobrenome': sobrenome, 'email': email, 'carros': zip(carros, placas, anos) })
         
         if not re.fullmatch(re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+'), email,): 
             return render(request, 'clientes.html', {'nome': nome, 'sobrenome': sobrenome, 'cpf': cpf, 'carros': zip(carros, placas, anos)})
@@ -40,7 +43,7 @@ def clientes(request):
             car = Carro(carro=carro, placa=placa, ano=ano, cliente=cliente)
             car.save()
 
-        return HttpResponse('teste')
+        return redirect(reverse('clientes')) 
     
     #função envia dados para o front-end
     
@@ -53,12 +56,22 @@ def att_cliente(request):
 
     #transforma dados em json para serem lidos.
     clientes_json = json.loads(serializers.serialize('json', cliente))[0]['fields']
+    cliente_id = json.loads(serializers.serialize('json', cliente))[0]['pk']
     carros_json = json.loads(serializers.serialize('json', carros))
     carros_json = [{'fields': carro['fields'], 'id': carro['pk']} for carro in carros_json]
-    data = {'cliente': clientes_json, 'carros': carros_json}
+    data = {'cliente': clientes_json, 'carros': carros_json, 'cliente_id': cliente_id}
     return JsonResponse(data)
 
-    #atualizar informações do carro
+def excluir_carro(request, id):
+    try:
+        carro = Carro.objects.get(id=id)
+        carro.delete()
+        return redirect(reverse('clientes')+f'?aba=att_cliente&id_cliente={id}')
+    except:
+        #Exibir mensagem de erro
+        return redirect(reverse('clientes')+f'?aba=att_cliente&id_cliente={id}')
+
+    #validações do carro
 
 @csrf_exempt #envia a informação sem o csrf token
 def update_carro(request, id):
@@ -67,7 +80,39 @@ def update_carro(request, id):
     ano = request.POST.get('ano')
 
     carro = Carro.objects.get(id=id)
-    list_carros = Carro.objects.filter(placa=placa)
+    list_carros = Carro.objects.filter(placa=placa).exclude(id=id)
+
     if list_carros.exists():
         return HttpResponse('Placa já existente')
-    return HttpResponse("Dados alterado com sucesso")
+    
+    #atualizar dados do carro
+
+    carro.carro = nome_carro
+    carro.placa = placa
+    carro.ano = ano
+    carro.save()
+
+    try:
+        return redirect(reverse('clientes'))
+    except:
+        #Exibir mensagem de erro
+        return JsonResponse({'status': '500' })
+
+def update_cliente(request, id):
+        body = json.loads(request.body)
+        nome = body['nome']
+        sobrenome = body['sobrenome']
+        email = body['email']
+        cpf = body['cpf']
+
+        cliente = get_object_or_404(Cliente, id=id)
+
+        try:
+            cliente.nome = nome
+            cliente.sobrenome = sobrenome
+            cliente.email = email
+            cliente.cpf = cpf
+            cliente.save()
+            return JsonResponse({'status': '200', 'nome': nome, 'sobrenome': sobrenome, 'email': email, 'cpf': cpf})
+        except:
+            return JsonResponse({'status': '500' })
