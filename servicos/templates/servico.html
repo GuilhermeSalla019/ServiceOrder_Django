@@ -13,8 +13,13 @@
     <div class="container">
         <a href="{% url 'gerar_os' servico.identificador %}">GERAR ORDEM DE SERVIÇO</a>
         <br>
+        <br>
         {{servico.titulo}}
-        
+        <br>
+        <br>    
+        <div class="btn btn-secondary">
+            <a href="{% url 'listar_servico' %}">Voltar</a>
+            <br> 
+        </div>
     </div>
-
 {% endblock %}

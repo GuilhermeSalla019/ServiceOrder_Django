@@ -37,8 +37,13 @@
                     </td>
                     <td>{{servico.preco_total}}</td>
                 </tr>
+
             {% endfor %}
         </tbody>
         </table>
+        <div class="btn btn-secondary">
+            <a href="{% url 'novo_servico' %}">Adicionar Serviço</a>
+            <br> 
+        </div>
     </div>
 {% endblock %}

@@ -4,6 +4,8 @@ from django.http import HttpResponse, FileResponse
 from .models import Servico
 from fpdf import FPDF
 from io import BytesIO
+from django.shortcuts import redirect
+from django.urls import reverse
 
 #Função: Formulario add Serviços
 
@@ -16,7 +18,7 @@ def novo_servico(request):
 
         if form.is_valid():
             form.save()
-            return render(request, 'novo_servico.html', {'form': form})
+            return redirect(reverse('listar_servico'))
         else:
             return render(request, 'novo_servico.html', {'form': form})
         
@@ -41,19 +43,21 @@ def gerar_os(request, identificador):
     pdf = FPDF()
     pdf.add_page()
 
+    pdf.set_font('Arial', 'B', 20)#fonte do Cabeçalho PDF
+    pdf.set_fill_color(240,240,240)#Cor de fundo do cabeçalho
+    pdf.cell(0, 30, 'Orçamento', 1, 1, 'C', 1)
+
     pdf.set_font('Arial', 'B', 13)#fonte do PDF
 
     pdf.set_fill_color(240,240,240)#Cor de fundo
     
     pdf.cell(0, 15, 'Leandro Cavalari Oficina' , 1, 1, 'L', 1)
     pdf.cell(0, 10, 'CNPJ: XX.XXX.XXX/XXXX-XX', 1, 1, 'L', 1)
-
-    pdf.cell(0, 10, 'Orçamento', 1, 1, 'L', 1)
     
     pdf.cell(40, 10, 'Cliente:', 1, 0, 'L', 1)#designer do PDF **ALTERAR
     pdf.cell(0, 10, f'{servico.cliente.nome}', 1, 1, 'L', 1)
     
-    pdf.cell(40, 40, 'Manutenções:', 1, 0, 'L', 1)
+    pdf.cell(40, 10, 'Manutenções:', 1, 0, 'L', 1)
 
     categorias_manutencao = servico.categoria_manutencao.all()
     for i, manutencao in enumerate(categorias_manutencao):

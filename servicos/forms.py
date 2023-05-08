@@ -4,7 +4,7 @@ from .models import Servico, CategoriaManutencao
 class FormServico(ModelForm):
     class Meta:
         model = Servico
-        exclude = ['finalizado', 'protocole'] #excluir campos do form
+        exclude = ['finalizado', 'protocole', 'identificador'] #excluir campos do form
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
