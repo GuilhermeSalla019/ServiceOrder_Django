@@ -6,8 +6,11 @@ from .choices import ChoicesCategoriaManutencao
 from datetime import datetime
 
 class CategoriaManutencao(models.Model):
+
     titulo = models.CharField(max_length=3, choices=ChoicesCategoriaManutencao.choices)
     preco = models.DecimalField(max_digits=8, decimal_places=2)
+    #descricao = models.CharField(max_length=500)
+    #observacao = models.CharField(max_length=500)
 
     def __str__(self) -> str:
         return self.titulo
@@ -15,10 +18,12 @@ class CategoriaManutencao(models.Model):
 class Servico(models.Model):
     titulo = models.CharField(max_length=30)
     cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True)
+    descricao = models.CharField(max_length=500, null=True, blank=True)
     categoria_manutencao = models.ManyToManyField(CategoriaManutencao)
     data_inicio = models.DateField(null=True)
     data_entrega = models.DateField(null=True)
     finalizado = models.BooleanField(default=False)
+    observacao = models.CharField(max_length=500, null=True, blank=True)
     protocole = models.CharField(max_length=52, null=True, blank=True)
     identificador = models.CharField(max_length=24, null=True, blank=True)
 

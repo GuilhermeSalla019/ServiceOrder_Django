@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'clientes/css/clientes.css' %}">
+{% endblock %}
+
+{% block 'dashboard' %}
+    <br>
+    <br>
+    <div class="container">
+        <form action="{% url 'servico' %}" method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.name }}">{{ field.label }}</label>
+                    {% if field.field.widget.input_type != 'checkbox' %}
+                        <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="form-control" value="{{ field.value }}">
+                    {% else %}
+                        <div class="form-check">
+                            <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="form-check-input" {% if field.value %}checked{% endif %}>
+                            <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <input type="submit" class="btn btn-primary" value="Salvar">
+            <br>
+            <br>
+        </form>    
+    </div>
+
+{% endblock %}

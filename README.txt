@@ -22,3 +22,5 @@ RF5: Criar tela de Agenda e status dos serviços
 RF6: Criar inteface de dados do historico de atendimento ao cliente
 RF7: Gerar OS em PDF
 RF8: Gerar alerta de serviço (Tempo de manutenção periodica)
+
+1 - Criar Campos de observações(Outros Serviços) e descrição da solicitação do cliente

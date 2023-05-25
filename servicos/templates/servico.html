@@ -11,15 +11,44 @@
     <br>
     <br>
     <div class="container">
-        <a href="{% url 'gerar_os' servico.identificador %}">GERAR ORDEM DE SERVIÇO</a>
+        <h3><a href="{% url 'gerar_os' servico.identificador %}">GERAR ORDEM DE SERVIÇO</a></h3>
+        <br>
+        <h7>Serviço: {{servico.titulo}}</h7>
         <br>
         <br>
-        {{servico.titulo}}
+        <h7>Preço Total do Serviço: {{servico.preco_total}}</h7>
         <br>
-        <br>    
-        <div class="btn btn-secondary">
-            <a href="{% url 'listar_servico' %}">Voltar</a>
-            <br> 
+        <br>
+        {% if servico.descricao %}
+            <h7>Descrição do problema: {{ servico.descricao }}</h7>
+            <br>
+            <br>
+        {% endif %}
+        {% if servico.observacao %}
+        <h7>Observações: {{ servico.observacao }}</h7>
+        {% endif %}
+        <br>
+        <br>
+        <div class="btn-group justify-content-between">        
+            <div class="btn mr-1">
+                {% if not servico.finalizado %}
+                <form action="{% url 'finalizar_servico' servico.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Finalizar Serviço</button>
+                </form>
+                {% endif %}
+            </div>
+            <div class="btn">
+                <form>
+                    <a href="{% url 'editar_servico' identificador=servico.id %}">Editar</a>
+                </form>
+            </div>
+            <div class="btn mr-3">
+                    <form>
+                        <a href="{% url 'listar_servico' %}" class="btn btn-secondary">Voltar</a>
+                    </form>
+            </div>
         </div>
     </div>
+    
 {% endblock %}

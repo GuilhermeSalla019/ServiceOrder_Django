@@ -1,8 +1,8 @@
 from django.urls import path
 from . import views
 
-"""URL Redireciona para serviços """
+"""URL Redireciona para pagina inicial"""
 
 urlpatterns = [
-    path('home/', views.home, name="home_init"),
+    path('', views.home, name="home_init"),
 ]

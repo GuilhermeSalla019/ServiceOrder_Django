@@ -1,16 +1,21 @@
 from django.forms import ModelForm
-from .models import Servico, CategoriaManutencao
+from django import forms
+from .models import Servico, CategoriaManutencao    
 
 class FormServico(ModelForm):
     class Meta:
         model = Servico
-        exclude = ['finalizado', 'protocole', 'identificador'] #excluir campos do form
+        exclude = ['finalizado', 'protocole', 'identificador', ] #excluir campos do form
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class': 'form-control'})
+            self.fields['categoria_manutencao'].widget.attrs.update({'multiple': 'multiple'})
             self.fields[field].widget.attrs.update({'placeholder': field})
+
+            self.fields['data_inicio'].widget.attrs.update({'placeholder': 'DD/MM/AAAA'})
+            self.fields['data_entrega'].widget.attrs.update({'placeholder': 'DD/MM/AAAA'})
 
             #alterar descrição do serviço no form
 
